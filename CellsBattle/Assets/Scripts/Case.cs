@@ -41,10 +41,11 @@ public class Case : MonoBehaviour {
 
     void OnMouseOver(){
         if(Input.GetMouseButtonDown(0)){
-            if (casestate == CaseState.plyr1) casestate = CaseState.plyr2 ;
-            else casestate = CaseState.plyr1;
+            // if (casestate == CaseState.plyr1) casestate = CaseState.plyr2 ;
+            // else casestate = CaseState.plyr1;
             
-            anim.SetInteger("AnimCaseState",(int)casestate);
+            // anim.SetInteger("AnimCaseState",(int)casestate);
+            pop++;
         }
  }
     
