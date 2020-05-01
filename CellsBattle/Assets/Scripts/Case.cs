@@ -11,8 +11,10 @@ public class Case : MonoBehaviour {
     // booléen HasReceived (inutile selon Ahmed)
     // booléen HasSent (inutiles selon Ahmed)
     // booléen  HasChangedTeam
-
     
+    //Variaables Ahmed
+    private int popnew;
+    private int popold;
 
     private const int popmax = 20;
     public int pop;
@@ -31,13 +33,14 @@ public class Case : MonoBehaviour {
     CaseState casestate = CaseState.neutral;
 
     void Start(){
-        pop = 1;
+        popnew = 1;
         anim = GetComponentInChildren<Animator> ();
         anim.SetInteger("AnimCaseState",(int)casestate);
         position = GetComponent<Transform>();
     }
 
     void Update(){
+        pop= popnew+popold;
     }
 
     //gère l'envoi des cellules avec varible globale de MapManager casedereference
@@ -48,9 +51,11 @@ public class Case : MonoBehaviour {
             // else casestate = CaseState.plyr1;
             
             // anim.SetInteger("AnimCaseState",(int)casestate);
-            pop++;
+            popnew++;
         }
  }
-    
+    public void Duplicate(){
+        popnew=2*popnew;
+    }
 
 }

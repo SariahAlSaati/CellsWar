@@ -567,6 +567,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 990fb16dd5ed4798986cd160c19a0f08, type: 3}
+--- !u!4 &324495379 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5934844072437780494, guid: 9bcfefb53a77acfd0a3b9f8ab7258f08,
+    type: 3}
+  m_PrefabInstance: {fileID: 2050686591}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &437602754
 GameObject:
   m_ObjectHideFlags: 0
@@ -1655,7 +1661,7 @@ PrefabInstance:
     - target: {fileID: 8004038898004468798, guid: 990fb16dd5ed4798986cd160c19a0f08,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15
+      value: -133.9
       objectReference: {fileID: 0}
     - target: {fileID: 8004038898004468798, guid: 990fb16dd5ed4798986cd160c19a0f08,
         type: 3}
@@ -1740,7 +1746,7 @@ PrefabInstance:
         type: 3}
       propertyPath: CaseDepart2
       value: 
-      objectReference: {fileID: 2050686592}
+      objectReference: {fileID: 324495379}
     - target: {fileID: 343436248080681694, guid: 9bcfefb53a77acfd0a3b9f8ab7258f08,
         type: 3}
       propertyPath: m_Name
@@ -1749,7 +1755,7 @@ PrefabInstance:
     - target: {fileID: 7969808185063244750, guid: 9bcfefb53a77acfd0a3b9f8ab7258f08,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 6.8
       objectReference: {fileID: 0}
     - target: {fileID: 7969808185063244750, guid: 9bcfefb53a77acfd0a3b9f8ab7258f08,
         type: 3}
@@ -1803,12 +1809,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9bcfefb53a77acfd0a3b9f8ab7258f08, type: 3}
---- !u!4 &2050686592 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1400977164767584565, guid: 9bcfefb53a77acfd0a3b9f8ab7258f08,
-    type: 3}
-  m_PrefabInstance: {fileID: 2050686591}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2050686593 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7353079155230905334, guid: 9bcfefb53a77acfd0a3b9f8ab7258f08,
