@@ -18,6 +18,8 @@ public class Case : MonoBehaviour {
     public int pop;
     private int condition;
 
+    private Transform position;
+
     private Animator anim;
     
     enum CaseState {
@@ -32,6 +34,7 @@ public class Case : MonoBehaviour {
         pop = 1;
         anim = GetComponentInChildren<Animator> ();
         anim.SetInteger("AnimCaseState",(int)casestate);
+        position = GetComponent<Transform>();
     }
 
     void Update(){
