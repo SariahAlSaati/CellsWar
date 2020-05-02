@@ -1,6 +1,6 @@
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Case : MonoBehaviour {
@@ -11,7 +11,7 @@ public class Case : MonoBehaviour {
     // booléen HasReceived (inutile selon Ahmed)
     // booléen HasSent (inutiles selon Ahmed)
     // booléen  HasChangedTeam
-    
+
     //Variaables Ahmed
     private int popnew;
     private int popold;
@@ -23,39 +23,53 @@ public class Case : MonoBehaviour {
     private Transform position;
 
     private Animator anim;
-    
-    enum CaseState {
-        neutral = 0,
-        plyr1 = 1,
-        plyr2 = 2,
+
+    public const int _NEUTRAL = 0;
+    public const int _PLAYER1 = 1;
+    public const int _PLAYER2 = 2;
+
+    int _stateOfCase = _NEUTRAL;
+
+    public int stateOfCase {
+        get {
+            return _stateOfCase;
+        }
+        set {
+            _stateOfCase = value;
+        }
     }
 
-    CaseState casestate = CaseState.neutral;
-
-    void Start(){
+    void Start () {
         popnew = 1;
         anim = GetComponentInChildren<Animator> ();
-        anim.SetInteger("AnimCaseState",(int)casestate);
-        position = GetComponent<Transform>();
+        anim.SetInteger ("AnimCaseState", stateOfCase);
+        position = GetComponent<Transform> ();
     }
 
-    void Update(){
-        pop= popnew+popold;
+    void Update () {
+        pop = popnew + popold;
+        anim.SetInteger ("AnimCaseState", stateOfCase);
     }
 
     //gère l'envoi des cellules avec varible globale de MapManager casedereference
 
-    void OnMouseOver(){
-        if(Input.GetMouseButtonDown(0)){
-            // if (casestate == CaseState.plyr1) casestate = CaseState.plyr2 ;
-            // else casestate = CaseState.plyr1;
-            
-            // anim.SetInteger("AnimCaseState",(int)casestate);
-            popnew++;
+    void OnMouseOver () {
+        if (Input.GetMouseButtonDown (0) && !GUIHandler.suspendActions) {
+            if (stateOfCase == _PLAYER1) stateOfCase = _PLAYER2;
+            else stateOfCase = _PLAYER1;
+
+            anim.SetInteger ("AnimCaseState", stateOfCase);
+            // popnew++;
         }
- }
-    public void Duplicate(){
-        popnew=2*popnew;
+    }
+    public void Duplicate () {
+        popnew = 2 * popnew;
+    }
+
+    public void ResetCase() {
+        popnew = 0;
+        popold = 1;
+        stateOfCase = _NEUTRAL;
     }
 
 }

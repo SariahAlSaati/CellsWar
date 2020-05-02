@@ -50,3 +50,6 @@ TagManager:
   - name: ForeGround
     uniqueID: 533576699
     locked: 0
+  - name: GUI
+    uniqueID: 226570517
+    locked: 0

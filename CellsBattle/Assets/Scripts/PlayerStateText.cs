@@ -16,6 +16,6 @@ public class PlayerStateText : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        text.text = GUIHandler.state.ToString();
+        text.text = GUIHandler.stateOfGame.ToString();
     }
 }
