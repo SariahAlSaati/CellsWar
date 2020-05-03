@@ -43,7 +43,88 @@ public class GUIHandler : MonoBehaviour
         endTurnbtn.onClick.AddListener(TaskOnClickEndTurnButton);
 
         button_RESIGN.gameObject.SetActive (false);
+<<<<<<< Updated upstream
 
+=======
+        button_ENDTURN.gameObject.SetActive (false);
+        TextPlayer.gameObject.SetActive (false);
+        TextMenu.gameObject.SetActive (true);
+        WinPlyr1.gameObject.SetActive (false);
+        WinPlyr2.gameObject.SetActive (false);
+
+        grid = Carte.GetComponent<Grille> ();
+        casePlyr1 = grid.CaseDepart1.GetComponent<Case> ();
+        casePlyr2 = grid.CaseDepart2.GetComponent<Case> ();
+
+        casePlyr1.stateOfCase = _PLAYER1;
+        casePlyr2.stateOfCase = _PLAYER2;
+        // grid.Duplicate(_PLAYER1);
+
+        }
+
+    // Update is called once per frame
+    void Update () {
+        if (casePlyr1.stateOfCase == _PLAYER2) {
+            casePlyr1.stateOfCase = _NEUTRAL;
+            StartCoroutine (Plyr2WinAnim ());
+        } else if (casePlyr2.stateOfCase == _PLAYER1) {
+            casePlyr2.stateOfCase = _NEUTRAL;
+            StartCoroutine (Plyr1WinAnim ());
+        }
+
+    }
+
+    void TaskOnClickPlayButton () {
+        button_PLAY.gameObject.SetActive (false);
+        button_RESIGN.gameObject.SetActive (true);
+        button_ENDTURN.gameObject.SetActive (true);
+        // InputField.gameObject.SetActive (true);
+        TextPlayer.gameObject.SetActive (true);
+        TextMenu.gameObject.SetActive (false);
+        stateOfGame = _PLAYER1;
+    }
+
+    void TaskOnClickResignButton () {
+        ResetGame ();
+    }
+
+    void TaskOnClickEndTurnButton () {
+        if (stateOfGame == _PLAYER1) {
+            grid.Duplicate(_PLAYER1);
+            stateOfGame = _PLAYER2;
+            ResetMidTurn ();
+
+        } else {
+            grid.Duplicate(_PLAYER2);
+            stateOfGame = _PLAYER1;
+            ResetTurn ();
+        }
+    }
+
+    private IEnumerator Plyr2WinAnim () {
+        suspendActions = true;
+        WinPlyr2.gameObject.SetActive (true);
+        yield return new WaitForSeconds (3.0f);
+        WinPlyr2.gameObject.SetActive (false);
+
+        ResetGame ();
+        suspendActions = false;
+    }
+
+    private IEnumerator Plyr1WinAnim () {
+        suspendActions = true;
+        WinPlyr1.gameObject.SetActive (true);
+        yield return new WaitForSeconds (3.0f);
+        WinPlyr1.gameObject.SetActive (false);
+
+        ResetGame ();
+        suspendActions = false;
+
+    }
+
+    void ResetGame () {
+        button_RESIGN.gameObject.SetActive (false);
+>>>>>>> Stashed changes
         button_ENDTURN.gameObject.SetActive (false);
         InputField.gameObject.SetActive (false);
         TextPlayer.gameObject.SetActive (false);

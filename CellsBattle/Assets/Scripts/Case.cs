@@ -12,7 +12,13 @@ public class Case : MonoBehaviour {
     // booléen HasSent (inutiles selon Ahmed)
     // booléen  HasChangedTeam
 
+<<<<<<< Updated upstream
     
+=======
+    //Variaables Ahmed
+    // public int popnew;
+    // public int popold;
+>>>>>>> Stashed changes
 
     private const int popmax = 20;
     public int pop;
@@ -30,8 +36,14 @@ public class Case : MonoBehaviour {
 
     CaseState casestate = CaseState.neutral;
 
+<<<<<<< Updated upstream
     void Start(){
         pop = 1;
+=======
+    void Start () {
+        // popnew = 0;
+        // popold = 0;
+>>>>>>> Stashed changes
         anim = GetComponentInChildren<Animator> ();
         anim.SetInteger("AnimCaseState",(int)casestate);
         position = GetComponent<Transform>();
@@ -50,7 +62,14 @@ public class Case : MonoBehaviour {
             // anim.SetInteger("AnimCaseState",(int)casestate);
             pop++;
         }
+<<<<<<< Updated upstream
  }
     
+=======
+    }
+    public void Duplicate () {
+        pop = System.Math.Min (2 * (pop-cellsReceived)+cellsReceived, popmax);
+    }
+>>>>>>> Stashed changes
 
 }

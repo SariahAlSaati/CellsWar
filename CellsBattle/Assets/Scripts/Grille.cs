@@ -4,6 +4,7 @@ public class Grille : MonoBehaviour {
     public Transform CaseDepart1;
     public Transform CaseDepart2;
     public static int Scale = 17;
+<<<<<<< Updated upstream
     
     
     void Start() {
@@ -11,6 +12,22 @@ public class Grille : MonoBehaviour {
         Debug.Log(case1.pop);
     }
    
+=======
+    private Transform map;
+    public static Transform caseDeReference;
+    public static bool hasCaseDeReference = false;
+
+    void Start () {
+        map = GetComponent<Transform> ();
+        if (map == null) Debug.Log ("pas de map");
+        // Case case1 = CaseDepart1.GetComponent<Case>();
+       
+        // Debug.Log(case1.pop);
+        CaseDepart1.GetComponent<Case> ().pop = 12;
+        CaseDepart2.GetComponent<Case> ().pop = 8;
+        // Duplicate(1);
+         }
+>>>>>>> Stashed changes
 
     bool isNeighbour(Transform case1, Transform case2){
         Vector3 position1 = case1.position;
@@ -22,7 +39,70 @@ public class Grille : MonoBehaviour {
 
         // Debug.Log(System.Math.Abs(position1.y - position2.y)*Scale);
 
+<<<<<<< Updated upstream
         if (System.Math.Abs(position1.y - position2.y) >0.76*Scale) return false;
+=======
+        if (System.Math.Abs (position1.y - position2.y) > 0.76 * Scale) return false;
+
+        return true;
+    }
+
+    public void Duplicate (int state) {
+        foreach (Transform tilemap in map) {
+            if (tilemap == null) Debug.Log ("pas de tilemap");
+
+            foreach (Transform children in tilemap) {
+                if (children == null) Debug.Log ("pas de case");
+
+                else {
+
+                    //Debug.Log(children.position);
+                    Case mycase = children.GetComponent<Case> ();
+
+                    if (mycase == null) Debug.Log ("pas de composante case");
+
+                    else {
+                        if (mycase.stateOfCase==state){
+                            mycase.Duplicate();
+                            Debug.Log(mycase.pop);
+                        }
+                        // Debug.Log(mycase.pop);
+
+                        // Debug.Log("pas de state");
+
+                    }
+                }
+            }
+        }
+    }
+
+    public void ResetMap () {
+        foreach (Transform tilemap in map) {
+            if (tilemap == null) Debug.Log ("pas de tilemap");
+            foreach (Transform children in tilemap) {
+                if (children == null) Debug.Log ("pas de case");
+
+                else {
+
+                    //Debug.Log(children.position);
+                    Case mycase = children.GetComponent<Case> ();
+
+                    if (mycase == null) Debug.Log ("pas de composante case");
+
+                    else {
+                        mycase.ResetCase ();
+                        Debug.Log("duplication");
+
+                    }
+                }
+            }
+        }
+        CaseDepart1.GetComponent<Case> ().pop = 12;
+        CaseDepart2.GetComponent<Case> ().pop = 8;
+    }
+
+    public static bool SendCells (Transform caseFrom, Transform caseTo, int numberOfCells) {
+>>>>>>> Stashed changes
         
         return true;
     }
