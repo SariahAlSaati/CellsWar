@@ -7,12 +7,16 @@ public class GUIHandler : MonoBehaviour {
     public Transform button_PLAY;
     public Transform button_RESIGN;
     public Transform button_ENDTURN;
+    public Transform button_SEND;
     public Transform InputField;
+    private InputField fieldinput;
     public Transform TextPlayer;
     public Transform TextMenu;
     public Transform Carte;
     public Transform WinPlyr1;
     public Transform WinPlyr2;
+
+    private Grille grid;
 
     private Case casePlyr1;
     private Case casePlyr2;
@@ -25,6 +29,9 @@ public class GUIHandler : MonoBehaviour {
     public static bool suspendActions = false;
 
     private static int _stateOfGame = _INGUI;
+
+    public static bool hasReceivedInt = false;
+    public static int cellsToSend = 0;
 
     public static int stateOfGame {
         get {
@@ -46,23 +53,26 @@ public class GUIHandler : MonoBehaviour {
         Button endTurnbtn = button_ENDTURN.GetComponent<Button> ();
         endTurnbtn.onClick.AddListener (TaskOnClickEndTurnButton);
 
-        button_RESIGN.gameObject.SetActive (false);
+        Button sendbtn = button_SEND.GetComponent<Button> ();
+        fieldinput = InputField.GetComponent<InputField> ();
 
-        button_ENDTURN.gameObject.SetActive (false);
+        button_SEND.gameObject.SetActive (false);
         InputField.gameObject.SetActive (false);
+        button_RESIGN.gameObject.SetActive (false);
+        button_ENDTURN.gameObject.SetActive (false);
         TextPlayer.gameObject.SetActive (false);
         TextMenu.gameObject.SetActive (true);
         WinPlyr1.gameObject.SetActive (false);
         WinPlyr2.gameObject.SetActive (false);
 
-        Grille grid = Carte.GetComponent<Grille> ();
+        grid = Carte.GetComponent<Grille> ();
         casePlyr1 = grid.CaseDepart1.GetComponent<Case> ();
         casePlyr2 = grid.CaseDepart2.GetComponent<Case> ();
 
         casePlyr1.stateOfCase = _PLAYER1;
         casePlyr2.stateOfCase = _PLAYER2;
 
-    }
+        }
 
     // Update is called once per frame
     void Update () {
@@ -80,25 +90,24 @@ public class GUIHandler : MonoBehaviour {
         button_PLAY.gameObject.SetActive (false);
         button_RESIGN.gameObject.SetActive (true);
         button_ENDTURN.gameObject.SetActive (true);
-        InputField.gameObject.SetActive (true);
+        // InputField.gameObject.SetActive (true);
         TextPlayer.gameObject.SetActive (true);
         TextMenu.gameObject.SetActive (false);
         stateOfGame = _PLAYER1;
     }
 
     void TaskOnClickResignButton () {
-        button_RESIGN.gameObject.SetActive (false);
-        button_ENDTURN.gameObject.SetActive (false);
-        button_PLAY.gameObject.SetActive (true);
-        InputField.gameObject.SetActive (false);
-        TextPlayer.gameObject.SetActive (false);
-        TextMenu.gameObject.SetActive (true);
-        stateOfGame = _INGUI;
+        ResetGame ();
     }
 
     void TaskOnClickEndTurnButton () {
-        if (stateOfGame == _PLAYER1) stateOfGame = _PLAYER2;
-        else stateOfGame = _PLAYER1;
+        if (stateOfGame == _PLAYER1) {
+            stateOfGame = _PLAYER2;
+            ResetMidTurn ();
+        } else {
+            stateOfGame = _PLAYER1;
+            ResetTurn ();
+        }
     }
 
     private IEnumerator Plyr2WinAnim () {
@@ -126,7 +135,7 @@ public class GUIHandler : MonoBehaviour {
         button_RESIGN.gameObject.SetActive (false);
         button_ENDTURN.gameObject.SetActive (false);
         button_PLAY.gameObject.SetActive (true);
-        InputField.gameObject.SetActive (false);
+        // InputField.gameObject.SetActive (false);
         TextPlayer.gameObject.SetActive (false);
         TextMenu.gameObject.SetActive (true);
         stateOfGame = _INGUI;
@@ -136,4 +145,34 @@ public class GUIHandler : MonoBehaviour {
         casePlyr2.stateOfCase = _PLAYER2;
     }
 
+    void ResetTurn () {
+        grid.ResetGridTurn ();
+    }
+
+    void ResetMidTurn () {
+        grid.ResetGridMidTurn ();
+    }
+
+    // public IEnumerator AskNumberCells () {
+    //     suspendActions = true;
+    //     button_SEND.gameObject.SetActive (true);
+    //     InputField.gameObject.SetActive (true);
+    //     hasReceivedInt = false;
+
+    //     while (!hasReceivedInt) {}
+
+    //     button_SEND.gameObject.SetActive (false);
+    //     InputField.gameObject.SetActive (false);
+    //     suspendActions = false;
+    //     yield return null;
+
+    // }
+
+    public bool OnSubmit () {
+        cellsToSend = int.Parse (fieldinput.text);
+        Debug.Log ("You sent " + cellsToSend + " cells !");
+        fieldinput.text = "";
+        hasReceivedInt = true;
+        return true;
+    }
 }

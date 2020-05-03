@@ -13,12 +13,12 @@ public class Case : MonoBehaviour {
     // booléen  HasChangedTeam
 
     //Variaables Ahmed
-    private int popnew;
-    private int popold;
+    public int popnew;
+    public int popold;
 
     private const int popmax = 20;
     public int pop;
-    private int condition;
+    //private int condition;
 
     private Transform position;
 
@@ -39,37 +39,69 @@ public class Case : MonoBehaviour {
         }
     }
 
+    public bool hasReceivedCells = false;
+    public bool hasChangedTeam = false;
+    public int cellsReceived = 0;
+    public bool hasSentCells = false;
+
     void Start () {
-        popnew = 1;
+        popnew = 0;
+        popold = 0;
         anim = GetComponentInChildren<Animator> ();
         anim.SetInteger ("AnimCaseState", stateOfCase);
         position = GetComponent<Transform> ();
     }
 
     void Update () {
-        pop = popnew + popold;
+        // pop = popnew + popold;
         anim.SetInteger ("AnimCaseState", stateOfCase);
     }
 
-    //gère l'envoi des cellules avec varible globale de MapManager casedereference
+    //gère l'envoi des cellules avec les variables statiques Grille.caseDeReference et GUIHandler.suspendActions
 
     void OnMouseOver () {
-        if (Input.GetMouseButtonDown (0) && !GUIHandler.suspendActions) {
-            if (stateOfCase == _PLAYER1) stateOfCase = _PLAYER2;
-            else stateOfCase = _PLAYER1;
+        if (Input.GetMouseButtonDown (0) && !GUIHandler.suspendActions && GUIHandler.stateOfGame != GUIHandler._INGUI) {
 
-            anim.SetInteger ("AnimCaseState", stateOfCase);
-            // popnew++;
+            if (!Grille.hasCaseDeReference) {
+                if (GUIHandler.stateOfGame == stateOfCase) {
+                    Grille.hasCaseDeReference = true;
+                    Grille.caseDeReference = position;
+                }
+            } else { //hasCaseDeReference
+                if (Grille.isNeighbour (position, Grille.caseDeReference)) {
+                    GUIHandler.hasReceivedInt = false;
+                    // while(!GUIHandler.hasReceivedInt){}
+
+                    Grille.SendCells (Grille.caseDeReference, position, 2);
+
+                }
+                Grille.hasCaseDeReference = false;
+            }
         }
     }
     public void Duplicate () {
         popnew = 2 * popnew;
     }
 
-    public void ResetCase() {
-        popnew = 0;
-        popold = 1;
+    public void ResetCase () {
+        ResetStateEndTurn ();
+        // popnew = 0;
+        // popold = 0;
+        pop = 0;
         stateOfCase = _NEUTRAL;
+
     }
 
+    public void ResetStateEndTurn () {
+        // popold = popold + popnew;
+        // popnew = 0;
+        hasReceivedCells = false;
+        hasChangedTeam = false;
+        cellsReceived = 0;
+        hasSentCells = false;
+
+    }
+    public void ResetStateMidTurn () {
+        hasSentCells = false;
+    }
 }
