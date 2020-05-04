@@ -12,9 +12,9 @@ public class Case : MonoBehaviour {
     // booléen HasSent (inutiles selon Ahmed)
     // booléen  HasChangedTeam
 
-    //Variaables Ahmed
-    public int popnew;
-    public int popold;
+    // //Variaables Ahmed
+    // public int popnew;
+    // public int popold;
 
     private const int popmax = 20;
     public int pop;
@@ -45,8 +45,8 @@ public class Case : MonoBehaviour {
     public bool hasSentCells = false;
 
     void Start () {
-        popnew = 0;
-        popold = 0;
+        // popnew = 0;
+        // popold = 0;
         anim = GetComponentInChildren<Animator> ();
         anim.SetInteger ("AnimCaseState", stateOfCase);
         position = GetComponent<Transform> ();
@@ -80,7 +80,7 @@ public class Case : MonoBehaviour {
         }
     }
     public void Duplicate () {
-        popnew = 2 * popnew;
+        pop = System.Math.Min (2 * (pop-cellsReceived)+cellsReceived, popmax);
     }
 
     public void ResetCase () {

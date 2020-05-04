@@ -102,9 +102,11 @@ public class GUIHandler : MonoBehaviour {
 
     void TaskOnClickEndTurnButton () {
         if (stateOfGame == _PLAYER1) {
+            grid.Duplicate(_PLAYER1);
             stateOfGame = _PLAYER2;
             ResetMidTurn ();
         } else {
+            grid.Duplicate(_PLAYER2);
             stateOfGame = _PLAYER1;
             ResetTurn ();
         }

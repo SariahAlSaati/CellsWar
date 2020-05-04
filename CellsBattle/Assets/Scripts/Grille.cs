@@ -34,7 +34,7 @@ public class Grille : MonoBehaviour {
         return true;
     }
 
-    void Duplicate () {
+    public void Duplicate (int state) {
         foreach (Transform tilemap in map) {
             if (tilemap == null) Debug.Log ("pas de tilemap");
 
@@ -49,8 +49,10 @@ public class Grille : MonoBehaviour {
                     if (mycase == null) Debug.Log ("pas de composante case");
 
                     else {
-                        mycase.Duplicate ();
-                        //Debug.Log("duplication");
+                         if (mycase.stateOfCase==state){
+                            mycase.Duplicate();
+                            Debug.Log(mycase.pop);
+                        }
 
                     }
                 }
