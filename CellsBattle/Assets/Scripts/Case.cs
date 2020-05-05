@@ -66,21 +66,35 @@ public class Case : MonoBehaviour {
                 if (GUIHandler.stateOfGame == stateOfCase) {
                     Grille.hasCaseDeReference = true;
                     Grille.caseDeReference = position;
+
+                    Grille.hasCaseDeReference2 = false;
                 }
             } else { //hasCaseDeReference
                 if (Grille.isNeighbour (position, Grille.caseDeReference)) {
-                    GUIHandler.hasReceivedInt = false;
-                    // while(!GUIHandler.hasReceivedInt){}
+                    Grille.caseDeReference2 = position;
+                    Grille.hasCaseDeReference2 = true;
 
-                    Grille.SendCells (Grille.caseDeReference, position, 2);
+                    GUIHandler.doSend = true;
+                    
 
                 }
+
                 Grille.hasCaseDeReference = false;
             }
         }
     }
+
+    // private IEnumerator WaitForInput(Transform caseFrom, Transform caseTo) {
+    //     while (!GUIHandler.hasReceivedInt) {
+    //         yield return new WaitForSeconds(3.0f);
+    //         Debug.Log("wait");
+    //     }
+    //     bool sent = Grille.SendCells (caseFrom, caseTo, GUIHandler.cellsToSend);
+    //     Debug.Log(sent);
+    // }
+
     public void Duplicate () {
-        pop = System.Math.Min (2 * (pop-cellsReceived)+cellsReceived, popmax);
+        pop = System.Math.Min (2 * (pop - cellsReceived) + cellsReceived, popmax);
     }
 
     public void ResetCase () {

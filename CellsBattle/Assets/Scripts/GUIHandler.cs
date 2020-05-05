@@ -27,11 +27,14 @@ public class GUIHandler : MonoBehaviour {
     public const int _PLAYER2 = 2;
 
     public static bool suspendActions = false;
+    public static bool doSend = false;
+    public static bool hasReceivedInt = false;
+    public static int cellsToSend = 0;
 
     private static int _stateOfGame = _INGUI;
 
-    public static bool hasReceivedInt = false;
-    public static int cellsToSend = 0;
+    private int CellsAtFirst1 = 5;
+    private int CellsAtFirst2 = 5;
 
     public static int stateOfGame {
         get {
@@ -71,8 +74,10 @@ public class GUIHandler : MonoBehaviour {
 
         casePlyr1.stateOfCase = _PLAYER1;
         casePlyr2.stateOfCase = _PLAYER2;
+        casePlyr1.pop = CellsAtFirst1;
+        casePlyr2.pop = CellsAtFirst2;
 
-        }
+    }
 
     // Update is called once per frame
     void Update () {
@@ -84,31 +89,44 @@ public class GUIHandler : MonoBehaviour {
             StartCoroutine (Plyr1WinAnim ());
         }
 
+        if (doSend) {
+            doSend = false;
+            suspendActions = true;
+            StartCoroutine (AskAndSendCells ());
+        }
+
     }
 
     void TaskOnClickPlayButton () {
-        button_PLAY.gameObject.SetActive (false);
-        button_RESIGN.gameObject.SetActive (true);
-        button_ENDTURN.gameObject.SetActive (true);
-        // InputField.gameObject.SetActive (true);
-        TextPlayer.gameObject.SetActive (true);
-        TextMenu.gameObject.SetActive (false);
-        stateOfGame = _PLAYER1;
+        if (!suspendActions) {
+            button_PLAY.gameObject.SetActive (false);
+            button_RESIGN.gameObject.SetActive (true);
+            button_ENDTURN.gameObject.SetActive (true);
+            // InputField.gameObject.SetActive (true);
+            TextPlayer.gameObject.SetActive (true);
+            TextMenu.gameObject.SetActive (false);
+
+            stateOfGame = _PLAYER1;
+        }
     }
 
     void TaskOnClickResignButton () {
-        ResetGame ();
+        if (!suspendActions) {
+            ResetGame ();
+        }
     }
 
     void TaskOnClickEndTurnButton () {
-        if (stateOfGame == _PLAYER1) {
-            grid.Duplicate(_PLAYER1);
-            stateOfGame = _PLAYER2;
-            ResetMidTurn ();
-        } else {
-            grid.Duplicate(_PLAYER2);
-            stateOfGame = _PLAYER1;
-            ResetTurn ();
+        if (!suspendActions) {
+            if (stateOfGame == _PLAYER1) {
+                grid.Duplicate (_PLAYER1);
+                stateOfGame = _PLAYER2;
+                ResetMidTurn ();
+            } else {
+                grid.Duplicate (_PLAYER2);
+                stateOfGame = _PLAYER1;
+                ResetTurn ();
+            }
         }
     }
 
@@ -145,6 +163,8 @@ public class GUIHandler : MonoBehaviour {
 
         casePlyr1.stateOfCase = _PLAYER1;
         casePlyr2.stateOfCase = _PLAYER2;
+        casePlyr1.pop = CellsAtFirst1;
+        casePlyr2.pop = CellsAtFirst2;
     }
 
     void ResetTurn () {
@@ -155,26 +175,28 @@ public class GUIHandler : MonoBehaviour {
         grid.ResetGridMidTurn ();
     }
 
-    // public IEnumerator AskNumberCells () {
-    //     suspendActions = true;
-    //     button_SEND.gameObject.SetActive (true);
-    //     InputField.gameObject.SetActive (true);
-    //     hasReceivedInt = false;
+    public IEnumerator AskAndSendCells () {
+        button_SEND.gameObject.SetActive (true);
+        InputField.gameObject.SetActive (true);
+        while (!hasReceivedInt) {
+            yield return new WaitForSeconds (1.0f);
+            Debug.Log ("wait");
+        }
+        button_SEND.gameObject.SetActive (false);
+        InputField.gameObject.SetActive (false);
+        Grille.SendCells (cellsToSend);
 
-    //     while (!hasReceivedInt) {}
+        Grille.hasCaseDeReference = false;
+        Grille.hasCaseDeReference2 = false;
+        hasReceivedInt = false;
+        suspendActions = false;
+    }
 
-    //     button_SEND.gameObject.SetActive (false);
-    //     InputField.gameObject.SetActive (false);
-    //     suspendActions = false;
-    //     yield return null;
-
-    // }
-
-    public bool OnSubmit () {
+    public void OnSubmit () {
         cellsToSend = int.Parse (fieldinput.text);
         Debug.Log ("You sent " + cellsToSend + " cells !");
         fieldinput.text = "";
         hasReceivedInt = true;
-        return true;
+        // return true;
     }
 }

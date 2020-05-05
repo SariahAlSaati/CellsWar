@@ -9,14 +9,17 @@ public class Grille : MonoBehaviour {
     public static Transform caseDeReference;
     public static bool hasCaseDeReference = false;
 
+    public static Transform caseDeReference2;
+    public static bool hasCaseDeReference2 = false;
+
     void Start () {
         map = GetComponent<Transform> ();
         if (map == null) Debug.Log ("pas de map");
         // Case case1 = CaseDepart1.GetComponent<Case>();
         //Duplicate();
         // Debug.Log(case1.pop);
-        CaseDepart1.GetComponent<Case> ().pop = 12;
-        CaseDepart2.GetComponent<Case> ().pop = 8;
+        // CaseDepart1.GetComponent<Case> ().pop = 12;
+        // CaseDepart2.GetComponent<Case> ().pop = 8;
     }
 
     public static bool isNeighbour (Transform case1, Transform case2) {
@@ -51,7 +54,7 @@ public class Grille : MonoBehaviour {
                     else {
                          if (mycase.stateOfCase==state){
                             mycase.Duplicate();
-                            Debug.Log(mycase.pop);
+                            // Debug.Log(mycase.pop);
                         }
 
                     }
@@ -81,25 +84,25 @@ public class Grille : MonoBehaviour {
                 }
             }
         }
-        CaseDepart1.GetComponent<Case> ().pop = 12;
-        CaseDepart2.GetComponent<Case> ().pop = 8;
+        // CaseDepart1.GetComponent<Case> ().pop = 12;
+        // CaseDepart2.GetComponent<Case> ().pop = 8;
     }
 
-    public static bool SendCells (Transform caseFrom, Transform caseTo, int numberOfCells) {
+    public static void SendCells (int numberOfCells) {
         
         // Debug.Log ("cells sent");
-        Case myCaseFrom = caseFrom.GetComponent<Case> ();
-        Case myCaseTo = caseTo.GetComponent<Case> ();
+        Case myCaseFrom = caseDeReference.GetComponent<Case> ();
+        Case myCaseTo = caseDeReference2.GetComponent<Case> ();
 
         if (myCaseFrom.hasSentCells) {
-            // Debug.Log ("has sent cells");
-            return false;
+            Debug.Log ("has sent cells");
+            return;
         }
         // Debug.Log (myCaseFrom.pop);
 
         if (myCaseFrom.pop < numberOfCells) {
-            // Debug.Log ("not enough population");
-            return false;
+            Debug.Log ("not enough population");
+            return;
         }
 
         if (myCaseTo.stateOfCase == Case._NEUTRAL) {
@@ -117,7 +120,7 @@ public class Grille : MonoBehaviour {
             // Debug.Log (myCaseTo.pop);
 
             if (myCaseFrom.pop == 0) myCaseFrom.stateOfCase = Case._NEUTRAL;
-            return true;
+            return;
         }
 
         if (myCaseFrom.stateOfCase == myCaseTo.stateOfCase) {
@@ -129,7 +132,7 @@ public class Grille : MonoBehaviour {
             myCaseTo.cellsReceived += numberOfCells;
 
             if (myCaseFrom.pop == 0) myCaseFrom.stateOfCase = Case._NEUTRAL;
-            return true;
+            return;
         }
         //cases are from different teams
         // Debug.Log ("to case of adverse team");
@@ -153,7 +156,7 @@ public class Grille : MonoBehaviour {
 
         if (myCaseFrom.pop == 0) myCaseFrom.stateOfCase = Case._NEUTRAL;
 
-        return true;
+        
     }
 
     public void ResetGridTurn () {
