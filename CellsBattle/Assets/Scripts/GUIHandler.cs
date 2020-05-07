@@ -180,7 +180,7 @@ public class GUIHandler : MonoBehaviour {
         InputField.gameObject.SetActive (true);
         while (!hasReceivedInt) {
             yield return new WaitForSeconds (1.0f);
-            Debug.Log ("wait");
+            // Debug.Log ("wait");
         }
         button_SEND.gameObject.SetActive (false);
         InputField.gameObject.SetActive (false);
@@ -194,7 +194,7 @@ public class GUIHandler : MonoBehaviour {
 
     public void OnSubmit () {
         cellsToSend = int.Parse (fieldinput.text);
-        Debug.Log ("You sent " + cellsToSend + " cells !");
+        // Debug.Log ("You sent " + cellsToSend + " cells !");
         fieldinput.text = "";
         hasReceivedInt = true;
         // return true;

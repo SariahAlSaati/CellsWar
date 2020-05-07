@@ -98,10 +98,16 @@ public class Grille : MonoBehaviour {
             Debug.Log ("has sent cells");
             return;
         }
+
+        if (caseDeReference.position == caseDeReference2.position) {
+            Debug.Log("These are the same cell ! ");
+            return;
+        }
+
         // Debug.Log (myCaseFrom.pop);
 
-        if (myCaseFrom.pop < numberOfCells) {
-            Debug.Log ("not enough population");
+        if ((myCaseFrom.pop - myCaseFrom.cellsReceived) < numberOfCells) {
+            Debug.Log ("Not enough population, you cannot send one cell two times in the same turn !");
             return;
         }
 

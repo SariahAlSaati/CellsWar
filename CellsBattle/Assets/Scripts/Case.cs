@@ -64,10 +64,11 @@ public class Case : MonoBehaviour {
 
             if (!Grille.hasCaseDeReference) {
                 if (GUIHandler.stateOfGame == stateOfCase) {
+                    Grille.hasCaseDeReference2 = false;
                     Grille.hasCaseDeReference = true;
                     Grille.caseDeReference = position;
 
-                    Grille.hasCaseDeReference2 = false;
+                    
                 }
             } else { //hasCaseDeReference
                 if (Grille.isNeighbour (position, Grille.caseDeReference)) {
