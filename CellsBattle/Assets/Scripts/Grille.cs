@@ -94,10 +94,10 @@ public class Grille : MonoBehaviour {
         Case myCaseFrom = caseDeReference.GetComponent<Case> ();
         Case myCaseTo = caseDeReference2.GetComponent<Case> ();
 
-        if (myCaseFrom.hasSentCells) {
-            Debug.Log ("has sent cells");
-            return;
-        }
+        // if (myCaseFrom.hasSentCells) {
+        //     Debug.Log ("has sent cells");
+        //     return;
+        // }
 
         if (caseDeReference.position == caseDeReference2.position) {
             Debug.Log("These are the same cell ! ");
@@ -106,7 +106,12 @@ public class Grille : MonoBehaviour {
 
         // Debug.Log (myCaseFrom.pop);
 
-        if ((myCaseFrom.pop - myCaseFrom.cellsReceived) < numberOfCells) {
+        if (myCaseFrom.pop == numberOfCells) {
+            Debug.Log("You cannot leave the case !");
+            return;
+        }
+
+        if ((myCaseFrom.pop - myCaseFrom.cellsReceived) < (numberOfCells)) {
             Debug.Log ("Not enough population, you cannot send one cell two times in the same turn !");
             return;
         }
@@ -132,10 +137,13 @@ public class Grille : MonoBehaviour {
         if (myCaseFrom.stateOfCase == myCaseTo.stateOfCase) {
             // Debug.Log ("to case of same team");
             myCaseFrom.pop -= numberOfCells;
-            myCaseTo.pop += numberOfCells;
+            // myCaseTo.pop += numberOfCells;
+            int mem = myCaseTo.pop;
+
+            myCaseTo.pop = System.Math.Min(myCaseTo.pop + numberOfCells, 20);
 
             myCaseTo.hasReceivedCells = true;
-            myCaseTo.cellsReceived += numberOfCells;
+            myCaseTo.cellsReceived += myCaseTo.pop - mem;
 
             if (myCaseFrom.pop == 0) myCaseFrom.stateOfCase = Case._NEUTRAL;
             return;
