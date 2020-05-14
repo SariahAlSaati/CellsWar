@@ -101,7 +101,94 @@ public class Grille : MonoBehaviour {
         CaseDepart2.GetComponent<Case> ().pop = 8;
     }
 
+<<<<<<< Updated upstream
     public static bool SendCells (Transform caseFrom, Transform caseTo, int numberOfCells) {
+>>>>>>> Stashed changes
+=======
+    public static void SendCells (int numberOfCells) {
+        
+        // Debug.Log ("cells sent");
+        Case myCaseFrom = caseDeReference.GetComponent<Case> ();
+        Case myCaseTo = caseDeReference2.GetComponent<Case> ();
+
+        // if (myCaseFrom.hasSentCells) {
+        //     Debug.Log ("has sent cells");
+        //     return;
+        // }
+
+        if (caseDeReference.position == caseDeReference2.position) {
+            Debug.Log("These are the same cell ! ");
+            return;
+        }
+
+        // Debug.Log (myCaseFrom.pop);
+
+        if (myCaseFrom.pop == numberOfCells) {
+            Debug.Log("You cannot leave the case !");
+            return;
+        }
+
+        if ((myCaseFrom.pop - myCaseFrom.cellsReceived) < (numberOfCells)) {
+            Debug.Log ("Not enough population, you cannot send one cell two times in the same turn !");
+            return;
+        }
+
+        if (myCaseTo.stateOfCase == Case._NEUTRAL) {
+
+            // Debug.Log ("to case neutral");
+
+            if (numberOfCells == 0) return;
+        
+            myCaseFrom.pop -= numberOfCells;
+            myCaseTo.pop += numberOfCells;
+            myCaseTo.hasReceivedCells = true;
+            myCaseTo.cellsReceived += numberOfCells;
+            myCaseTo.hasChangedTeam = true;
+            myCaseTo.stateOfCase = myCaseFrom.stateOfCase;
+            myCaseFrom.hasSentCells = true;
+            // Debug.Log (myCaseFrom.pop);
+            // Debug.Log (myCaseTo.pop);
+
+            if (myCaseFrom.pop == 0) myCaseFrom.stateOfCase = Case._NEUTRAL;
+            return;
+        }
+
+        if (myCaseFrom.stateOfCase == myCaseTo.stateOfCase) {
+            // Debug.Log ("to case of same team");
+            myCaseFrom.pop -= numberOfCells;
+            // myCaseTo.pop += numberOfCells;
+            int mem = myCaseTo.pop;
+
+            myCaseTo.pop = System.Math.Min(myCaseTo.pop + numberOfCells, 20);
+
+            myCaseTo.hasReceivedCells = true;
+            myCaseTo.cellsReceived += myCaseTo.pop - mem;
+
+            if (myCaseFrom.pop == 0) myCaseFrom.stateOfCase = Case._NEUTRAL;
+            return;
+        }
+        //cases are from different teams
+        // Debug.Log ("to case of adverse team");
+
+        myCaseFrom.pop -= numberOfCells;
+        myCaseFrom.hasSentCells = true;
+
+        if (numberOfCells > myCaseTo.pop) { //case go to attacker
+            myCaseTo.hasSentCells = false;
+            myCaseTo.hasChangedTeam = true;
+            myCaseTo.hasReceivedCells = true;
+            myCaseTo.pop = numberOfCells - myCaseTo.pop;;
+            myCaseTo.cellsReceived = myCaseTo.pop;
+            myCaseTo.stateOfCase = myCaseFrom.stateOfCase;
+        } else if (numberOfCells == myCaseTo.pop) { //case back to neutral
+            myCaseTo.ResetCase ();
+        } else { //Case remain to the same player
+            myCaseTo.pop -= numberOfCells;
+            myCaseTo.cellsReceived = System.Math.Max (myCaseTo.cellsReceived - numberOfCells, 0);
+        }
+
+        if (myCaseFrom.pop == 0) myCaseFrom.stateOfCase = Case._NEUTRAL;
+
 >>>>>>> Stashed changes
         
         return true;

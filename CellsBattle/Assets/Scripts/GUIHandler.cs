@@ -89,6 +89,7 @@ public class GUIHandler : MonoBehaviour
     }
 
     void TaskOnClickEndTurnButton () {
+<<<<<<< Updated upstream
         if (stateOfGame == _PLAYER1) {
             grid.Duplicate(_PLAYER1);
             stateOfGame = _PLAYER2;
@@ -98,6 +99,19 @@ public class GUIHandler : MonoBehaviour
             grid.Duplicate(_PLAYER2);
             stateOfGame = _PLAYER1;
             ResetTurn ();
+=======
+        if (!suspendActions) {
+            if (stateOfGame == _PLAYER1) {
+                // grid.Duplicate (_PLAYER1);
+                stateOfGame = _PLAYER2;
+                ResetMidTurn ();
+            } else {
+                grid.Duplicate (_PLAYER1);
+                grid.Duplicate (_PLAYER2);
+                stateOfGame = _PLAYER1;
+                ResetTurn ();
+            }
+>>>>>>> Stashed changes
         }
     }
 
