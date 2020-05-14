@@ -68,7 +68,8 @@ public class Case : MonoBehaviour {
                     Grille.hasCaseDeReference = true;
                     Grille.caseDeReference = position;
 
-                    
+                    TextDynamic.TextState = 2;
+
                 }
             } else { //hasCaseDeReference
                 if (Grille.isNeighbour (position, Grille.caseDeReference)) {
@@ -76,10 +77,8 @@ public class Case : MonoBehaviour {
                     Grille.hasCaseDeReference2 = true;
 
                     GUIHandler.doSend = true;
-                    
-
                 }
-
+                TextDynamic.TextState = 1;
                 Grille.hasCaseDeReference = false;
             }
         }

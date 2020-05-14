@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections;
+using UnityEngine.UI;
 
 public class Grille : MonoBehaviour {
     public Transform CaseDepart1;
@@ -11,6 +14,8 @@ public class Grille : MonoBehaviour {
 
     public static Transform caseDeReference2;
     public static bool hasCaseDeReference2 = false;
+
+
 
     void Start () {
         map = GetComponent<Transform> ();
@@ -52,8 +57,8 @@ public class Grille : MonoBehaviour {
                     if (mycase == null) Debug.Log ("pas de composante case");
 
                     else {
-                         if (mycase.stateOfCase==state){
-                            mycase.Duplicate();
+                        if (mycase.stateOfCase == state) {
+                            mycase.Duplicate ();
                             // Debug.Log(mycase.pop);
                         }
 
@@ -89,7 +94,7 @@ public class Grille : MonoBehaviour {
     }
 
     public static void SendCells (int numberOfCells) {
-        
+
         // Debug.Log ("cells sent");
         Case myCaseFrom = caseDeReference.GetComponent<Case> ();
         Case myCaseTo = caseDeReference2.GetComponent<Case> ();
@@ -100,25 +105,33 @@ public class Grille : MonoBehaviour {
         // }
 
         if (caseDeReference.position == caseDeReference2.position) {
-            Debug.Log("These are the same cell ! ");
+            // StartCoroutine (ErrorText ("These are the same box ! "));
+            GUIHandler.ErrorMessage = "These are the same box ! ";
+            GUIHandler.IsError = true;
             return;
         }
 
         // Debug.Log (myCaseFrom.pop);
 
         if (myCaseFrom.pop == numberOfCells) {
-            Debug.Log("You cannot leave the case !");
+            // StartCoroutine (ErrorText ("You cannot empty the box !"));
+            GUIHandler.ErrorMessage = "You cannot empty the box !";
+            GUIHandler.IsError = true;
             return;
         }
 
         if ((myCaseFrom.pop - myCaseFrom.cellsReceived) < (numberOfCells)) {
-            Debug.Log ("Not enough population, you cannot send one cell two times in the same turn !");
+            // StartCoroutine (ErrorText ("Not enough population, you cannot send one cell two times in the same turn !"));
+            GUIHandler.ErrorMessage = "Not enough population, you cannot send one cell two times in the same turn !";
+            GUIHandler.IsError = true;
             return;
         }
 
         if (myCaseTo.stateOfCase == Case._NEUTRAL) {
 
             // Debug.Log ("to case neutral");
+
+            if (numberOfCells == 0) return;
 
             myCaseFrom.pop -= numberOfCells;
             myCaseTo.pop += numberOfCells;
@@ -140,7 +153,7 @@ public class Grille : MonoBehaviour {
             // myCaseTo.pop += numberOfCells;
             int mem = myCaseTo.pop;
 
-            myCaseTo.pop = System.Math.Min(myCaseTo.pop + numberOfCells, 20);
+            myCaseTo.pop = System.Math.Min (myCaseTo.pop + numberOfCells, 20);
 
             myCaseTo.hasReceivedCells = true;
             myCaseTo.cellsReceived += myCaseTo.pop - mem;
@@ -170,8 +183,9 @@ public class Grille : MonoBehaviour {
 
         if (myCaseFrom.pop == 0) myCaseFrom.stateOfCase = Case._NEUTRAL;
 
-        
     }
+
+
 
     public void ResetGridTurn () {
         foreach (Transform tilemap in map) {
