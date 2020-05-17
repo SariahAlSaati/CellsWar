@@ -53,3 +53,6 @@ TagManager:
   - name: GUI
     uniqueID: 226570517
     locked: 0
+  - name: Rules
+    uniqueID: 197966805
+    locked: 0

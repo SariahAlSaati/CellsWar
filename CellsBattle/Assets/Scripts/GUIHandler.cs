@@ -31,6 +31,7 @@ public class GUIHandler : MonoBehaviour {
     public static bool suspendActions = false;
     public static bool doSend = false;
     public static bool hasReceivedInt = false;
+    public static bool hasBeenCancelled = false;
     public static int cellsToSend = 0;
 
     private static int _stateOfGame = _INGUI;
@@ -109,6 +110,24 @@ public class GUIHandler : MonoBehaviour {
         if (IsError) {
             IsError = false;
             StartCoroutine (ErrorText ());
+        }
+
+        if (Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown (KeyCode.KeypadEnter) ) {
+            if (button_SEND.gameObject.activeSelf) {
+                OnSubmit ();
+            } else if (button_PLAY.gameObject.activeSelf) {
+                TaskOnClickPlayButton ();
+            } else if (button_ENDTURN1.gameObject.activeSelf) {
+                TaskOnClickEndTurnButton1 ();
+            } else if (button_ENDTURN2.gameObject.activeSelf) {
+                TaskOnClickEndTurnButton2 ();
+            }
+
+        }
+
+        if (Input.GetKeyDown (KeyCode.Escape) && button_SEND.gameObject.activeSelf) {
+            hasBeenCancelled = true;
+            OnSubmit ();
         }
 
     }
@@ -221,6 +240,7 @@ public class GUIHandler : MonoBehaviour {
 
         button_SEND.gameObject.SetActive (true);
         InputField.gameObject.SetActive (true);
+        fieldinput.ActivateInputField ();
         while (!hasReceivedInt) {
             yield return new WaitForSeconds (1.0f);
             // Debug.Log ("wait");
@@ -238,7 +258,12 @@ public class GUIHandler : MonoBehaviour {
     }
 
     public void OnSubmit () {
-        cellsToSend = int.Parse (fieldinput.text);
+        if (hasBeenCancelled) {
+            cellsToSend = 0;
+        } else {
+            cellsToSend = int.Parse (fieldinput.text);
+        }
+        hasBeenCancelled = false;
         // Debug.Log ("You sent " + cellsToSend + " cells !");
         fieldinput.text = "";
         hasReceivedInt = true;

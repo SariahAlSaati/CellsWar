@@ -1,7 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using System.Collections;
 using UnityEngine.UI;
 
 public class Grille : MonoBehaviour {
@@ -15,16 +15,13 @@ public class Grille : MonoBehaviour {
     public static Transform caseDeReference2;
     public static bool hasCaseDeReference2 = false;
 
-
-
     void Start () {
         map = GetComponent<Transform> ();
         if (map == null) Debug.Log ("pas de map");
-        // Case case1 = CaseDepart1.GetComponent<Case>();
-        //Duplicate();
-        // Debug.Log(case1.pop);
-        // CaseDepart1.GetComponent<Case> ().pop = 12;
-        // CaseDepart2.GetComponent<Case> ().pop = 8;
+        
+
+        CaseDepart1.Find("Canvas").gameObject.SetActive (true);
+        CaseDepart2.Find("Canvas").gameObject.SetActive (true);
     }
 
     public static bool isNeighbour (Transform case1, Transform case2) {
@@ -89,24 +86,17 @@ public class Grille : MonoBehaviour {
                 }
             }
         }
-        // CaseDepart1.GetComponent<Case> ().pop = 12;
-        // CaseDepart2.GetComponent<Case> ().pop = 8;
+        CaseDepart1.Find("Canvas").gameObject.SetActive (true);
+        CaseDepart2.Find("Canvas").gameObject.SetActive (true);
     }
 
     public static void SendCells (int numberOfCells) {
 
-        // Debug.Log ("cells sent");
         Case myCaseFrom = caseDeReference.GetComponent<Case> ();
         Case myCaseTo = caseDeReference2.GetComponent<Case> ();
 
-        // if (myCaseFrom.hasSentCells) {
-        //     Debug.Log ("has sent cells");
-        //     return;
-        // }
-
         if (caseDeReference.position == caseDeReference2.position) {
-            // StartCoroutine (ErrorText ("These are the same box ! "));
-            GUIHandler.ErrorMessage = "These are the same box ! ";
+            GUIHandler.ErrorMessage = "Même case de départ et d'arrivée.";
             GUIHandler.IsError = true;
             return;
         }
@@ -114,15 +104,13 @@ public class Grille : MonoBehaviour {
         // Debug.Log (myCaseFrom.pop);
 
         if (myCaseFrom.pop == numberOfCells) {
-            // StartCoroutine (ErrorText ("You cannot empty the box !"));
-            GUIHandler.ErrorMessage = "You cannot empty the box !";
+            GUIHandler.ErrorMessage = "Vous ne pouvez pas vider la case.";
             GUIHandler.IsError = true;
             return;
         }
 
         if ((myCaseFrom.pop - myCaseFrom.cellsReceived) < (numberOfCells)) {
-            // StartCoroutine (ErrorText ("Not enough population, you cannot send one cell two times in the same turn !"));
-            GUIHandler.ErrorMessage = "Not enough population, you cannot send one cell two times in the same turn !";
+            GUIHandler.ErrorMessage = "Pas assez de cellules actives.";
             GUIHandler.IsError = true;
             return;
         }
@@ -132,6 +120,8 @@ public class Grille : MonoBehaviour {
             // Debug.Log ("to case neutral");
 
             if (numberOfCells == 0) return;
+
+            myCaseTo.transform.Find("Canvas").gameObject.SetActive (true);
 
             myCaseFrom.pop -= numberOfCells;
             myCaseTo.pop += numberOfCells;
@@ -143,7 +133,10 @@ public class Grille : MonoBehaviour {
             // Debug.Log (myCaseFrom.pop);
             // Debug.Log (myCaseTo.pop);
 
-            if (myCaseFrom.pop == 0) myCaseFrom.stateOfCase = Case._NEUTRAL;
+            if (myCaseFrom.pop == 0) {
+                myCaseFrom.stateOfCase = Case._NEUTRAL;
+                myCaseFrom.transform.Find("Canvas").gameObject.SetActive (false);
+            }
             return;
         }
 
@@ -184,8 +177,6 @@ public class Grille : MonoBehaviour {
         if (myCaseFrom.pop == 0) myCaseFrom.stateOfCase = Case._NEUTRAL;
 
     }
-
-
 
     public void ResetGridTurn () {
         foreach (Transform tilemap in map) {

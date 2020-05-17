@@ -99,10 +99,9 @@ public class Case : MonoBehaviour {
 
     public void ResetCase () {
         ResetStateEndTurn ();
-        // popnew = 0;
-        // popold = 0;
         pop = 0;
         stateOfCase = _NEUTRAL;
+        position.Find("Canvas").gameObject.SetActive (false);
 
     }
 
