@@ -14,6 +14,7 @@ public class GUIHandler : MonoBehaviour
 
     public const int _INGUI = 0;
     public const int _PLAYER1 = 1;
+<<<<<<< Updated upstream
 	public const int _PLAYER2 = 2;
 
 	
@@ -29,6 +30,33 @@ public class GUIHandler : MonoBehaviour
 				}
 		}
     
+=======
+    public const int _PLAYER2 = 2;
+    public const int _DepPLAYER1 =10;
+    public const int _DepPLAYER2 = 20;
+
+    public static bool suspendActions = false;
+    public static bool doSend = false;
+    public static bool hasReceivedInt = false;
+    public static int cellsToSend = 0;
+
+    private static int _stateOfGame = _INGUI;
+
+    private int CellsAtFirst1 = 5;
+    private int CellsAtFirst2 = 5;
+
+    public static int stateOfGame {
+        get {
+            return _stateOfGame;
+        }
+        set {
+            _stateOfGame = value;
+        }
+    }
+
+    public static bool IsError = false;
+    public static string ErrorMessage;
+>>>>>>> Stashed changes
 
     // Start is called before the first frame update
     void Start()
@@ -56,18 +84,25 @@ public class GUIHandler : MonoBehaviour
         casePlyr1 = grid.CaseDepart1.GetComponent<Case> ();
         casePlyr2 = grid.CaseDepart2.GetComponent<Case> ();
 
+<<<<<<< Updated upstream
         casePlyr1.stateOfCase = _PLAYER1;
         casePlyr2.stateOfCase = _PLAYER2;
         // grid.Duplicate(_PLAYER1);
+=======
+        casePlyr1.stateOfCase = _DepPLAYER1;
+        casePlyr2.stateOfCase = _DepPLAYER2;
+        casePlyr1.pop = CellsAtFirst1;
+        casePlyr2.pop = CellsAtFirst2;
+>>>>>>> Stashed changes
 
         }
 
     // Update is called once per frame
     void Update () {
-        if (casePlyr1.stateOfCase == _PLAYER2) {
+        if (casePlyr1.stateOfCase == _PLAYER2 || casePlyr1.stateOfCase == _DepPLAYER2) {
             casePlyr1.stateOfCase = _NEUTRAL;
             StartCoroutine (Plyr2WinAnim ());
-        } else if (casePlyr2.stateOfCase == _PLAYER1) {
+        } else if (casePlyr2.stateOfCase == _PLAYER1 || casePlyr2.stateOfCase == _DepPLAYER1) {
             casePlyr2.stateOfCase = _NEUTRAL;
             StartCoroutine (Plyr1WinAnim ());
         }
