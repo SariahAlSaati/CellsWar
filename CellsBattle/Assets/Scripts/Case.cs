@@ -5,31 +5,24 @@ using UnityEngine.UI;
 
 public class Case : MonoBehaviour {
 
-    // Contient IsNeighbour(Case deuxiemecase)
-    // Population Pi, population qu'il est possible d'envoyer
-    // Population Preceived: population reçue au cour du tour
-    // booléen HasReceived (inutile selon Ahmed)
-    // booléen HasSent (inutiles selon Ahmed)
-    // booléen  HasChangedTeam
-
-    // //Variaables Ahmed
-    // public int popnew;
-    // public int popold;
-
-    private const int popmax = 20;
-    public int pop;
-    //private int condition;
-
     private Transform position;
-
     private Animator anim;
 
     public const int _NEUTRAL = 0;
     public const int _PLAYER1 = 1;
     public const int _PLAYER2 = 2;
+    private const int popmax = 20;
+    private const int foodmax = 35;
+
+    public int popToCreate;
+    public int pop;
+
+    public bool hasReceivedCells = false;
+    public bool hasChangedTeam = false;
+    public int cellsReceived = 0;
+    public bool hasSentCells = false;
 
     int _stateOfCase = _NEUTRAL;
-
     public int stateOfCase {
         get {
             return _stateOfCase;
@@ -39,21 +32,14 @@ public class Case : MonoBehaviour {
         }
     }
 
-    public bool hasReceivedCells = false;
-    public bool hasChangedTeam = false;
-    public int cellsReceived = 0;
-    public bool hasSentCells = false;
-
     void Start () {
-        // popnew = 0;
-        // popold = 0;
         anim = GetComponentInChildren<Animator> ();
         anim.SetInteger ("AnimCaseState", stateOfCase);
         position = GetComponent<Transform> ();
+        popToCreate = foodmax;
     }
 
     void Update () {
-        // pop = popnew + popold;
         anim.SetInteger ("AnimCaseState", stateOfCase);
     }
 
@@ -67,7 +53,7 @@ public class Case : MonoBehaviour {
                     Grille.hasCaseDeReference2 = false;
                     Grille.hasCaseDeReference = true;
                     Grille.caseDeReference = position;
-
+                    anim.SetBool ("selected", true);
                     TextDynamic.TextState = 2;
 
                 }
@@ -77,37 +63,44 @@ public class Case : MonoBehaviour {
                     Grille.hasCaseDeReference2 = true;
 
                     GUIHandler.doSend = true;
-                }
+                    anim.SetBool ("selected", true);
+                } else { Grille.caseDeReference.GetComponentInChildren<Animator> ().SetBool ("selected", false); }
                 TextDynamic.TextState = 1;
                 Grille.hasCaseDeReference = false;
+
             }
         }
     }
 
-    // private IEnumerator WaitForInput(Transform caseFrom, Transform caseTo) {
-    //     while (!GUIHandler.hasReceivedInt) {
-    //         yield return new WaitForSeconds(3.0f);
-    //         Debug.Log("wait");
-    //     }
-    //     bool sent = Grille.SendCells (caseFrom, caseTo, GUIHandler.cellsToSend);
-    //     Debug.Log(sent);
-    // }
-
     public void Duplicate () {
-        pop = System.Math.Min (2 * (pop - cellsReceived) + cellsReceived, popmax);
+        int newpop = System.Math.Min (2 * (pop - cellsReceived) + cellsReceived, popmax);
+        if (newpop - pop <= popToCreate) {
+            popToCreate -= newpop - pop;
+            pop = newpop;
+        } else {
+            pop += popToCreate;
+            popToCreate = 0;
+        }
     }
 
     public void ResetCase () {
         ResetStateEndTurn ();
         pop = 0;
+        popToCreate = foodmax;
         stateOfCase = _NEUTRAL;
-        position.Find("Canvas").gameObject.SetActive (false);
+        position.Find ("Canvas").gameObject.SetActive (false);
+
+    }
+
+    public void ResetCaseToNeutral () {
+        ResetStateEndTurn ();
+        pop = 0;
+        stateOfCase = _NEUTRAL;
+        position.Find ("Canvas").gameObject.SetActive (false);
 
     }
 
     public void ResetStateEndTurn () {
-        // popold = popold + popnew;
-        // popnew = 0;
         hasReceivedCells = false;
         hasChangedTeam = false;
         cellsReceived = 0;

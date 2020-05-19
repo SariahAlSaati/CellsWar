@@ -8,6 +8,7 @@ public class GUIHandler : MonoBehaviour {
     public Transform button_RESIGN;
     public Transform button_ENDTURN1;
     public Transform button_ENDTURN2;
+    public Transform button_CHANGEMAP;
     public Transform button_SEND;
     public Transform InputField;
     private InputField fieldinput;
@@ -17,9 +18,7 @@ public class GUIHandler : MonoBehaviour {
     public Transform Carte;
     public Transform WinPlyr1;
     public Transform WinPlyr2;
-
     private Grille grid;
-
     private Case casePlyr1;
     private Case casePlyr2;
 
@@ -33,7 +32,6 @@ public class GUIHandler : MonoBehaviour {
     public static bool hasReceivedInt = false;
     public static bool hasBeenCancelled = false;
     public static int cellsToSend = 0;
-
     private static int _stateOfGame = _INGUI;
 
     private int CellsAtFirst1 = 5;
@@ -45,6 +43,15 @@ public class GUIHandler : MonoBehaviour {
         }
         set {
             _stateOfGame = value;
+        }
+    }
+
+    public Grille grille {
+        get {
+            return grid;
+        }
+        set {
+            grid = value;
         }
     }
 
@@ -69,6 +76,7 @@ public class GUIHandler : MonoBehaviour {
         fieldinput = InputField.GetComponent<InputField> ();
 
         button_SEND.gameObject.SetActive (false);
+        button_CHANGEMAP.gameObject.SetActive (true);
         InputField.gameObject.SetActive (false);
         button_RESIGN.gameObject.SetActive (false);
         button_ENDTURN1.gameObject.SetActive (false);
@@ -88,6 +96,8 @@ public class GUIHandler : MonoBehaviour {
         casePlyr2.stateOfCase = _PLAYER2;
         casePlyr1.pop = CellsAtFirst1;
         casePlyr2.pop = CellsAtFirst2;
+        casePlyr1.GetComponentInChildren<Animator> ().SetBool ("isDepart1", true);
+        casePlyr2.GetComponentInChildren<Animator> ().SetBool ("isDepart2", true);
 
     }
 
@@ -95,8 +105,10 @@ public class GUIHandler : MonoBehaviour {
     void Update () {
         if (casePlyr1.stateOfCase == _PLAYER2) {
             casePlyr1.stateOfCase = _NEUTRAL;
+            casePlyr1.transform.Find ("Canvas").gameObject.SetActive (false);
             StartCoroutine (Plyr2WinAnim ());
         } else if (casePlyr2.stateOfCase == _PLAYER1) {
+            casePlyr2.transform.Find ("Canvas").gameObject.SetActive (false);
             casePlyr2.stateOfCase = _NEUTRAL;
             StartCoroutine (Plyr1WinAnim ());
         }
@@ -112,15 +124,16 @@ public class GUIHandler : MonoBehaviour {
             StartCoroutine (ErrorText ());
         }
 
-        if (Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown (KeyCode.KeypadEnter) ) {
+        if (Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown (KeyCode.KeypadEnter) || Input.GetKeyDown (KeyCode.Space)) {
+
             if (button_SEND.gameObject.activeSelf) {
                 OnSubmit ();
-            } else if (button_PLAY.gameObject.activeSelf) {
-                TaskOnClickPlayButton ();
-            } else if (button_ENDTURN1.gameObject.activeSelf) {
+            } else if (stateOfGame == _PLAYER1) {
                 TaskOnClickEndTurnButton1 ();
-            } else if (button_ENDTURN2.gameObject.activeSelf) {
+            } else if (stateOfGame == _PLAYER2) {
                 TaskOnClickEndTurnButton2 ();
+            } else if (stateOfGame == _INGUI) {
+                TaskOnClickPlayButton ();
             }
 
         }
@@ -143,9 +156,9 @@ public class GUIHandler : MonoBehaviour {
     void TaskOnClickPlayButton () {
         if (!suspendActions) {
             button_PLAY.gameObject.SetActive (false);
+            button_CHANGEMAP.gameObject.SetActive (false);
             button_RESIGN.gameObject.SetActive (true);
             button_ENDTURN1.gameObject.SetActive (true);
-            // InputField.gameObject.SetActive (true);
             TextPlayer.gameObject.SetActive (true);
             TextMenu.gameObject.SetActive (false);
 
@@ -210,17 +223,16 @@ public class GUIHandler : MonoBehaviour {
 
     }
 
-    void ResetGame () {
+    public void ResetGame () {
         button_RESIGN.gameObject.SetActive (false);
         button_ENDTURN1.gameObject.SetActive (false);
         button_ENDTURN2.gameObject.SetActive (false);
         button_PLAY.gameObject.SetActive (true);
-        // InputField.gameObject.SetActive (false);
+        button_CHANGEMAP.gameObject.SetActive (true);
         TextPlayer.gameObject.SetActive (false);
         TextMenu.gameObject.SetActive (true);
         stateOfGame = _INGUI;
-        Carte.GetComponent<Grille> ().ResetMap ();
-
+        grid.ResetMap ();
         casePlyr1.stateOfCase = _PLAYER1;
         casePlyr2.stateOfCase = _PLAYER2;
         casePlyr1.pop = CellsAtFirst1;
@@ -243,7 +255,6 @@ public class GUIHandler : MonoBehaviour {
         fieldinput.ActivateInputField ();
         while (!hasReceivedInt) {
             yield return new WaitForSeconds (1.0f);
-            // Debug.Log ("wait");
         }
         button_SEND.gameObject.SetActive (false);
         InputField.gameObject.SetActive (false);
@@ -253,6 +264,8 @@ public class GUIHandler : MonoBehaviour {
         Grille.hasCaseDeReference2 = false;
         hasReceivedInt = false;
         suspendActions = false;
+        Grille.caseDeReference.GetComponentInChildren<Animator> ().SetBool ("selected", false);
+        Grille.caseDeReference2.GetComponentInChildren<Animator> ().SetBool ("selected", false);
 
         TextDynamic.TextState = 1;
     }
@@ -264,9 +277,7 @@ public class GUIHandler : MonoBehaviour {
             cellsToSend = int.Parse (fieldinput.text);
         }
         hasBeenCancelled = false;
-        // Debug.Log ("You sent " + cellsToSend + " cells !");
         fieldinput.text = "";
         hasReceivedInt = true;
-        // return true;
     }
 }

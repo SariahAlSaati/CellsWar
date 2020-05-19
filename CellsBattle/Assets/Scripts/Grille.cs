@@ -11,31 +11,22 @@ public class Grille : MonoBehaviour {
     private Transform map;
     public static Transform caseDeReference;
     public static bool hasCaseDeReference = false;
-
     public static Transform caseDeReference2;
     public static bool hasCaseDeReference2 = false;
 
     void Start () {
         map = GetComponent<Transform> ();
         if (map == null) Debug.Log ("pas de map");
-        
 
-        CaseDepart1.Find("Canvas").gameObject.SetActive (true);
-        CaseDepart2.Find("Canvas").gameObject.SetActive (true);
+        CaseDepart1.Find ("Canvas").gameObject.SetActive (true);
+        CaseDepart2.Find ("Canvas").gameObject.SetActive (true);
     }
 
     public static bool isNeighbour (Transform case1, Transform case2) {
         Vector3 position1 = case1.position;
         Vector3 position2 = case2.position;
-
-        // Debug.Log(System.Math.Abs(position1.x - position2.x)*Scale);
-
         if (System.Math.Abs (position1.x - position2.x) > 1.01 * Scale) return false;
-
-        // Debug.Log(System.Math.Abs(position1.y - position2.y)*Scale);
-
         if (System.Math.Abs (position1.y - position2.y) > 0.76 * Scale) return false;
-
         return true;
     }
 
@@ -47,8 +38,6 @@ public class Grille : MonoBehaviour {
                 if (children == null) Debug.Log ("pas de case");
 
                 else {
-
-                    //Debug.Log(children.position);
                     Case mycase = children.GetComponent<Case> ();
 
                     if (mycase == null) Debug.Log ("pas de composante case");
@@ -56,7 +45,6 @@ public class Grille : MonoBehaviour {
                     else {
                         if (mycase.stateOfCase == state) {
                             mycase.Duplicate ();
-                            // Debug.Log(mycase.pop);
                         }
 
                     }
@@ -72,22 +60,24 @@ public class Grille : MonoBehaviour {
                 if (children == null) Debug.Log ("pas de case");
 
                 else {
-
-                    //Debug.Log(children.position);
                     Case mycase = children.GetComponent<Case> ();
 
                     if (mycase == null) Debug.Log ("pas de composante case");
 
                     else {
                         mycase.ResetCase ();
-                        //Debug.Log("duplication");
-
                     }
                 }
             }
         }
-        CaseDepart1.Find("Canvas").gameObject.SetActive (true);
-        CaseDepart2.Find("Canvas").gameObject.SetActive (true);
+        CaseDepart1.Find ("Canvas").gameObject.SetActive (true);
+        CaseDepart2.Find ("Canvas").gameObject.SetActive (true);
+
+        if (hasCaseDeReference) caseDeReference.GetComponentInChildren<Animator> ().SetBool ("selected", false);
+        if (hasCaseDeReference2) caseDeReference2.GetComponentInChildren<Animator> ().SetBool ("selected", false);
+        hasCaseDeReference = false;
+        hasCaseDeReference2 = false;
+
     }
 
     public static void SendCells (int numberOfCells) {
@@ -100,9 +90,6 @@ public class Grille : MonoBehaviour {
             GUIHandler.IsError = true;
             return;
         }
-
-        // Debug.Log (myCaseFrom.pop);
-
         if (myCaseFrom.pop == numberOfCells) {
             GUIHandler.ErrorMessage = "Vous ne pouvez pas vider la case.";
             GUIHandler.IsError = true;
@@ -117,11 +104,9 @@ public class Grille : MonoBehaviour {
 
         if (myCaseTo.stateOfCase == Case._NEUTRAL) {
 
-            // Debug.Log ("to case neutral");
-
             if (numberOfCells == 0) return;
 
-            myCaseTo.transform.Find("Canvas").gameObject.SetActive (true);
+            myCaseTo.transform.Find ("Canvas").gameObject.SetActive (true);
 
             myCaseFrom.pop -= numberOfCells;
             myCaseTo.pop += numberOfCells;
@@ -130,20 +115,16 @@ public class Grille : MonoBehaviour {
             myCaseTo.hasChangedTeam = true;
             myCaseTo.stateOfCase = myCaseFrom.stateOfCase;
             myCaseFrom.hasSentCells = true;
-            // Debug.Log (myCaseFrom.pop);
-            // Debug.Log (myCaseTo.pop);
 
             if (myCaseFrom.pop == 0) {
                 myCaseFrom.stateOfCase = Case._NEUTRAL;
-                myCaseFrom.transform.Find("Canvas").gameObject.SetActive (false);
+                myCaseFrom.transform.Find ("Canvas").gameObject.SetActive (false);
             }
             return;
         }
 
         if (myCaseFrom.stateOfCase == myCaseTo.stateOfCase) {
-            // Debug.Log ("to case of same team");
             myCaseFrom.pop -= numberOfCells;
-            // myCaseTo.pop += numberOfCells;
             int mem = myCaseTo.pop;
 
             myCaseTo.pop = System.Math.Min (myCaseTo.pop + numberOfCells, 20);
@@ -168,7 +149,7 @@ public class Grille : MonoBehaviour {
             myCaseTo.cellsReceived = myCaseTo.pop;
             myCaseTo.stateOfCase = myCaseFrom.stateOfCase;
         } else if (numberOfCells == myCaseTo.pop) { //case back to neutral
-            myCaseTo.ResetCase ();
+            myCaseTo.ResetCaseToNeutral ();
         } else { //Case remain to the same player
             myCaseTo.pop -= numberOfCells;
             myCaseTo.cellsReceived = System.Math.Max (myCaseTo.cellsReceived - numberOfCells, 0);
@@ -185,20 +166,21 @@ public class Grille : MonoBehaviour {
                 if (children == null) Debug.Log ("pas de case");
 
                 else {
-
-                    //Debug.Log(children.position);
                     Case mycase = children.GetComponent<Case> ();
 
                     if (mycase == null) Debug.Log ("pas de composante case");
 
                     else {
                         mycase.ResetStateEndTurn ();
-                        //Debug.Log("reset case turn");
 
                     }
                 }
             }
         }
+        if (hasCaseDeReference) caseDeReference.GetComponentInChildren<Animator> ().SetBool ("selected", false);
+        if (hasCaseDeReference2) caseDeReference2.GetComponentInChildren<Animator> ().SetBool ("selected", false);
+        hasCaseDeReference = false;
+        hasCaseDeReference2 = false;
     }
 
     public void ResetGridMidTurn () {
@@ -208,19 +190,19 @@ public class Grille : MonoBehaviour {
                 if (children == null) Debug.Log ("pas de case");
 
                 else {
-
-                    //Debug.Log(children.position);
                     Case mycase = children.GetComponent<Case> ();
 
                     if (mycase == null) Debug.Log ("pas de composante case");
 
                     else {
                         mycase.ResetStateMidTurn ();
-                        //Debug.Log("reset case turn");
-
                     }
                 }
             }
         }
+        if (hasCaseDeReference) caseDeReference.GetComponentInChildren<Animator> ().SetBool ("selected", false);
+        if (hasCaseDeReference2) caseDeReference2.GetComponentInChildren<Animator> ().SetBool ("selected", false);
+        hasCaseDeReference = false;
+        hasCaseDeReference2 = false;
     }
 }
