@@ -43,3 +43,7 @@ This project was developed as part of a learning experience in game development.
 
 ## 📜 License
 For educational purposes only.
+
+## 👀 Quick glance
+<img width="400" alt="Screen3" src="https://github.com/user-attachments/assets/ea673562-2152-425d-93c2-679f1f9d44cb" />
+<img width="470" alt="Screen6" src="https://github.com/user-attachments/assets/0621048f-adb0-43b4-8320-42762f0352bb" />
