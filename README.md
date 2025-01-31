@@ -35,8 +35,8 @@ In this game, players engage in tactical decision-making to control cells, manag
 - Turn-based 
 
 ## 👥 Credits
-Sariah Al Saati – Game design, programming
-Ahmed H. – Game design, programming
+- Sariah Al Saati – Game design, programming
+- Ahmed H. – Game design, programming
 
 ## 📌 Notes
 This project was developed as part of a learning experience in game development. It may not be fully polished, but it represents our work in designing and implementing a strategy game from scratch.
